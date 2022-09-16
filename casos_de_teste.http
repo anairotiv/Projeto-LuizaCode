@@ -8,15 +8,15 @@ POST http://127.0.0.1:8000/usuario HTTP/1.1
 content-type: application/json
 
 {
-    "id": 80,
-    "nome": "bruna",
+    "id": 11,
+    "nome": "bianca",
     "email": "teste@gmail.com",
     "senha": "265"
 }
 
 #######################################
-# Pegar usuário pelo id
-GET http://127.0.0.1:8000/usuario?id=80 HTTP/1.1
+# Pegar usuário
+GET http://127.0.0.1:8000/usuario?id=11 HTTP/1.1
 content-type: application/json
 
 ####### Usuario pelo nome #############
@@ -39,10 +39,6 @@ content-type: application/json
     "cidade": "Goiania",
     "estado": "GO"
 }
-
-########################################
-DELETE http://127.0.0.1:8000/usuario/?id=2 HTTP/1.1
-content-type: application/json
 
 #######################################
 ############  produto  ################
