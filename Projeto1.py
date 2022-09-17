@@ -1,6 +1,3 @@
-from ast import Return
-import email
-from genericpath import exists
 from fastapi import FastAPI
 from typing import List
 from pydantic import BaseModel
@@ -51,14 +48,14 @@ db_end = {}
 db_carrinhos = {}
 
 # Validar Usuários
-def regras_cadastro_usuario(usuario):
-    if usuario.id in db_usuarios:
-        return FALHA
-    if usuario.email.endswith('@') == -1:
-        return FALHA
-    if len(usuario.senha) < 3:
-        return FALHA
-    return usuario(criar_usuário)
+#def regras_cadastro_usuario(usuario):
+   # if usuario.id in db_usuarios:
+      #  return FALHA
+   # if usuario.email.endswith('@') == -1:
+      #  return FALHA
+   # if len(usuario.senha) < 3:
+     #   return FALHA
+   # return usuario(criar_usuário)
        
         
 @app.post("/usuario/")
@@ -73,23 +70,31 @@ async def criar_usuário(usuario: Usuario):
 async def retornar_usuario(id: int):
             if id in db_usuarios:
                 return db_usuarios[id]
-            return FALHA
+            return FALHA, f'usuário não foi encontrado!'
      
         
+
 @app.get("/usuario/nome")
-async def retornar_usuario_com_nome(nome):
-                for nome in db_usuarios:
-                    if nome == nome:
-                        return db_usuarios[nome]
-                    else:
-                        return FALHA
+async def retornar_usuario_com_nome(nome: str):
+    for usuario in db_usuarios.values():
+        if usuario.nome == nome:
+            return usuario
+    return FALHA
+
+# @app.get("/usuario/nome")
+# async def retornar_usuario_com_nome(nome):
+#                 for nome in db_usuarios:
+#                     if nome == nome:
+#                         return db_usuarios[nome]
+#                     else:
+#                         return FALHA
                 
-        
-@app.delete("/usuario/")
+                
+@app.delete("/usuario/id")
 async def deletar_usuario(id: int):
             if id in db_usuarios:
                 del db_usuarios[id]
-                return "o usuário foi deletado do nosso banco de da"
+            return "usuário deletado da nossa base de dados"
             
         # Se não existir usuário com o id_usuario retornar falha, 
         # senão retornar uma lista de todos os endereços vinculados ao usuário
@@ -105,8 +110,13 @@ async def retornar_enderecos_do_usuario(id_usuario: int):
         
 @app.get("/usuarios/emails/")
 async def retornar_emails(dominio: str):
-            if email == dominio:
-                return dominio[dominio]
+        dominio = []
+        for usuario in db_usuarios:
+            if usuario.email == dominio:
+                dominio.append(usuario.email)
+                return dominio 
+            if dominio != []:
+                return FALHA
             
 #@app.get("/usuarios/emails/")
 #async def retornar_emails(dominio: str):

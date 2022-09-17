@@ -8,22 +8,26 @@ POST http://127.0.0.1:8000/usuario HTTP/1.1
 content-type: application/json
 
 {
-    "id": 11,
+    "id": 4,
     "nome": "bianca",
-    "email": "teste@gmail.com",
+    "email": "teste@hotmail.com",
     "senha": "265"
 }
 
 #######################################
 # Pegar usuário
-GET http://127.0.0.1:8000/usuario?id=11 HTTP/1.1
+GET http://127.0.0.1:8000/usuario?id=4 HTTP/1.1
 content-type: application/json
 
 ####### Usuario pelo nome #############
 
-GET http://127.0.0.1:8000/usuario/nome?nome=bianca
+GET http://127.0.0.1:8000/usuario/nome?nome=bianca HTTP/1.1
 content-type: application/json
 
+#### delete ####
+########################################
+DELETE http://127.0.0.1:8000/usuario/id?id=4 HTTP/1.1
+content-type: application/json
 
 #######################################
 ############  endereço  ###############
@@ -39,6 +43,12 @@ content-type: application/json
     "cidade": "Goiania",
     "estado": "GO"
 }
+
+#######################################
+# Listar endereços pelo domínio
+
+GET http://127.0.0.1:8000/usuarios/emails/dominio=@gmail.com  HTTP/1.1
+content-type: application/json
 
 #######################################
 ############  produto  ################
