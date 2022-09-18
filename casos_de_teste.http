@@ -9,8 +9,8 @@ content-type: application/json
 
 {
     "id": 1,
-    "nome": "anavi",
-    "email": "ana@gmail.com",
+    "nome": "brunq",
+    "email": "pedrolindo@gmail.com",
     "senha": "265"
 }
 
@@ -20,8 +20,9 @@ GET http://127.0.0.1:8000/usuario?id=1 HTTP/1.1
 content-type: application/json
 
 ####### Usuario pelo nome #############
+## quero que ele retorne apenas os dados de usuário cadastrados, o endereco não"
 
-GET http://127.0.0.1:8000/usuario/nome?nome=anavi HTTP/1.1
+GET http://127.0.0.1:8000/usuario/nome?nome=brunq HTTP/1.1
 content-type: application/json
 
 #### delete usuário por id ####
@@ -34,26 +35,26 @@ content-type: application/json
 #######################################
 
 # Criar endereço
-POST http://127.0.0.1:8000/endereco/1/ HTTP/1.1
+POST http://127.0.0.1:8000/endereco/4/ HTTP/1.1
 content-type: application/json
 
 {
-    "rua": "Rua jose",
+    "id_endereco":3,
+    "rua": "Rua gomes",
     "cep": "99999-999",
     "cidade": "Goiania",
     "estado": "GO"
 }
 
 #######################################
-# ainda não consigo ##
-# Listar endereços usuário
-GET http://127.0.0.1:8000/usuario/1/enderecos HTTP/1.1
+# retornar endereco dos usuários ##
+GET http://127.0.0.1:8000/usuario/4/enderecos HTTP/1.1
 content-type: application/json
 
 # deletar endereco do usuário ##
-## ainda não consigo ""
-
-DELETE http://127.0.0.1:8000/usuario/456/endereco/101 HTTP/1.1
+########################################################### 
+# não consigo ainda ##
+DELETE http://127.0.0.1:8000/endereco/3 HTTP/1.1
 content-type: application/json
 
 
@@ -72,7 +73,7 @@ POST http://127.0.0.1:8000/produto HTTP/1.1
 content-type: application/json
 
 {
-    "id":3,
+    "id":2,
     "nome": "Sorvete",
     "descricao": "Doce gelado",
     "preco": 9.99
@@ -80,14 +81,32 @@ content-type: application/json
 
 ##########################################
 ###    excluir um produto pelo id  #######
-DELETE http://127.0.0.1:8000/produto/3 HTTP/1.1
+DELETE http://127.0.0.1:8000/produto/5 HTTP/1.1
 content-type: application/json
 
 ##### CONSULTAR PRODUTO PELO ID ######
-GET http://127.0.0.1:8000/produto/3 HTTP/1.1
+GET http://127.0.0.1:8000/produto/5 HTTP/1.1
 content-type: application/json
 
+#############################################
+# Criar carrinho usuario, produto
+POST http://127.0.0.1:8000/carrinho/1/2/ HTTP/1.1
+content-type: application/json
 
+{
+    
+}
+
+#######################################
+# Busca total carrinho de um cliente 
+GET http://127.0.0.1:8000/carrinho/1/total HTTP/1.1
+content-type: application/json
+
+##########################################
+#   Busca carrinho de um cliente#
+##########################################
+GET http://127.0.0.1:8000/carrinho/4/ HTTP/1.1
+content-type: application/json
 
 
 
