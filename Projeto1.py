@@ -1,5 +1,6 @@
+from ast import Return
 from fastapi import FastAPI
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
         
 app = FastAPI()
@@ -14,6 +15,9 @@ class Endereco(BaseModel):
             cep: str
             cidade: str
             estado: str
+            
+            def __str__(self) -> str:
+                    return self.rua, self.cep, self.cidade, self.estado
         
         # Classe representando os dados do cliente
 class Usuario(BaseModel):
@@ -21,11 +25,12 @@ class Usuario(BaseModel):
             nome: str
             email: str
             senha: str
-       
+            enderecos: List[Endereco] = []
+            
         # Classe representando a lista de endereços de um cliente
 class ListaDeEnderecosDoUsuario(BaseModel):
             usuario: Usuario
-            enderecos: List[Endereco] = []
+            #enderecos: List[Endereco] = []
        
         # Classe representando os dados do produto
 class Produto(BaseModel):
@@ -40,12 +45,12 @@ class CarrinhoDeCompras(BaseModel):
             id_produtos: List[Produto] = []
             preco_total: float
             quantidade_de_produtos: int
-      
-    
+            
+
 db_usuarios = {}
 db_produtos = {}
-db_end = {}
-db_carrinhos = {}
+db_enderecos = {}
+db_carrinhos = []
 
 # Validar Usuários
 #def regras_cadastro_usuario(usuario):
@@ -94,101 +99,105 @@ async def retornar_usuario_com_nome(nome: str):
 async def deletar_usuario(id: int):
             if id in db_usuarios:
                 del db_usuarios[id]
-            return "usuário deletado da nossa base de dados"
-            
-        # Se não existir usuário com o id_usuario retornar falha, 
-        # senão retornar uma lista de todos os endereços vinculados ao usuário
-        # caso o usuário não possua nenhum endereço vinculado a ele, retornar 
-        # uma lista vazia
-        ### Estudar sobre Path Params (https://fastapi.tiangolo.com/tutorial/path-params/)
-@app.get("/usuario/{id_usuario}/endereços/")
-async def retornar_enderecos_do_usuario(id_usuario: int):
-            if id_usuario not in db_usuarios:
+                return "usuário deletado da nossa base de dados"
+            else:
                 return FALHA
+                
+     
         
-        
-        
-@app.get("/usuarios/emails/")
-async def retornar_emails(dominio: str):
-        dominio = []
-        for usuario in db_usuarios:
-            if usuario.email == dominio:
-                dominio.append(usuario.email)
-                return dominio 
-            if dominio != []:
-                return FALHA
-            
-#@app.get("/usuarios/emails/")
-#async def retornar_emails(dominio: str):
-            #if dominio.endswith: "@gmail.com"
-            #return dominio
-        
-        
-        
-        
-        # Se não existir usuário com o id_usuario retornar falha, 
-        # senão cria um endereço, vincula ao usuário e retornar OK
 @app.post("/endereco/{id_usuario}/")
-async def criar_endereco(endereco: Endereco, id_usuario: int):
+async def criar_endereco(end: Endereco, id_usuario: int):
+            if id_usuario not in db_usuarios.keys():
+                return FALHA, 'usuario não cadastrado'
+            for endereco in db_usuarios[id_usuario].enderecos:
+                if end == endereco:
+                    return FALHA, 'endereco já cadastrado'
+            db_usuarios[id_usuario].enderecos.append(end)
             return OK
-        
-        # Se não existir endereço com o id_endereco retornar falha, 
-        # senão deleta endereço correspondente ao id_endereco e retornar OK
-        # (lembrar de desvincular o endereço ao usuário)
+            # for usuario in db_usuarios.keys():
+            #     if usuario.id == id_usuario:
+            #         endereco.id = len(db_enderecos) + 1
+            #         db_enderecos.append(endereco)
+                    
+            #         endereco_usuario = ListaDeEnderecosDoUsuario()
+            #         endereco_usuario.usuario = usuario
+            #         endereco_usuario.endereco = endereco 
+            #         db_enderecos.usuario.append(endereco_usuario)
+            #     return FALHA
+            # return OK     
 @app.delete("/endereco/{id_endereco}/")
 async def deletar_endereco(id_endereco: int):
             if id_endereco in db_usuarios:
                 return OK
             else:
-                del db_usuarios[id_endereco]
-        
-    
-        # Se tiver outro produto com o mesmo ID retornar falha, 
-        # senão cria um produto e retornar OK
-        
+                del db_usuarios[id_endereco]   
+                  
+        # Se não existir usuário com o id_usuario retornar falha, 
+        # senão retornar uma lista de todos os endereços vinculados ao usuário
+        # caso o usuário não possua nenhum endereço vinculado a ele, retornar 
+        # uma lista vazia
+        ### Estudar sobre Path Params (https://fastapi.tiangolo.com/tutorial/path-params/)
+        # não consegui ainda
+@app.get("/usuario/{id_usuario}/endereços/")
+async def retornar_enderecos_do_usuario(id_usuario: int):
+            for registro in db_enderecos:
+                if registro[id_usuario] == id_usuario:
+                    return registro.enderecos
+
+
+@app.get("/usuarios/emails/{dominio_requisitado}")
+async def retornar_emails(dominio_requisitado):
+    lista_dominios = []
+    for id_usuario, dados_usuario in db_usuarios.items():
+        dominio = dados_usuario.email.split("@")[1]
+        if "dominio=@" + dominio == dominio_requisitado:
+            lista_dominios.append(dados_usuario.email)
+    return lista_dominios
+
+   
 @app.post("/produto/")
 async def criar_produto(produto: Produto):
-            return OK
-        
-        # Se não existir produto com o id_produto retornar falha, 
-        # senão deleta produto correspondente ao id_produto e retornar OK
-        # (lembrar de desvincular o produto dos carrinhos do usuário)
+             if produto.id not in db_produtos:
+                 db_produtos[produto.id] = produto
+                 return OK, 'O produto foi cadastrado no nosso banco de dados!'
+             return FALHA
+            
+
+@app.get("/produto/{id_produto}/")
+async def consultar_produto(id_produto: int):
+        if id_produto in db_produtos:
+                return db_produtos[id_produto]
+        return FALHA, f'usuário não foi encontrado!'
+      
+      
 @app.delete("/produto/{id_produto}/")
 async def deletar_produto(id_produto: int):
-            if id_produto in db_produtos:
+          if id_produto in db_produtos:
                 del db_produtos[id_produto]
-                return OK
-            
+                return OK, 'O produto foi descartado com sucesso'
         
-        
-        # Se não existir usuário com o id_usuario ou id_produto retornar falha, 
-        # se não existir um carrinho vinculado ao usuário, crie o carrinho
-        # e retornar OK
-        # senão adiciona produto ao carrinho e retornar OK
+#ainda não consegui"        
 @app.post("/carrinho/{id_usuario}/{id_produto}/")
 async def adicionar_carrinho(id_usuario: int, id_produto: int):
-            return OK
+            if id_usuario and id_produto:
+               return OK
+                       
         
-        
-        # Se não existir carrinho com o id_usuario retornar falha, 
-        # senão retorna o carrinho de compras.
+#ainda não"
 @app.get("/carrinho/{id_usuario}/")
 async def retornar_carrinho(id_usuario: int):
-            return CarrinhoDeCompras
+            for carrinho in db_carrinhos:
+                if carrinho.id_usuario == id_usuario:
+                    return carrinho
         
         
-        # Se não existir carrinho com o id_usuario retornar falha, 
-        # senão retorna o o número de itens e o valor total do carrinho de compras.
-        #criar uma instancia precisa invocar
-        #buug
+ # não sei se isso ta pronto #    
 @app.get("/carrinho/{id_usuario}/")
 async def retornar_total_carrinho(id_usuario: int):
             numero_itens, valor_total = 0
             return numero_itens, valor_total
     
     
-        # Se não existir usuário com o id_usuario retornar falha, 
-        # senão deleta o carrinho correspondente ao id_usuario e retornar OK
 @app.delete("/carrinho/{id_usuario}/")
 async def deletar_carrinho(id_usuario: int):
             if id_usuario not in db_usuarios:
@@ -205,4 +214,3 @@ async def bem_vinda():
         
         
         
-        #buscar o carrinho e retornar ele ao inves de criar um novo.

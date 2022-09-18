@@ -8,25 +8,25 @@ POST http://127.0.0.1:8000/usuario HTTP/1.1
 content-type: application/json
 
 {
-    "id": 4,
-    "nome": "bianca",
-    "email": "teste@hotmail.com",
+    "id": 1,
+    "nome": "anavi",
+    "email": "ana@gmail.com",
     "senha": "265"
 }
 
 #######################################
 # Pegar usuário
-GET http://127.0.0.1:8000/usuario?id=4 HTTP/1.1
+GET http://127.0.0.1:8000/usuario?id=1 HTTP/1.1
 content-type: application/json
 
 ####### Usuario pelo nome #############
 
-GET http://127.0.0.1:8000/usuario/nome?nome=bianca HTTP/1.1
+GET http://127.0.0.1:8000/usuario/nome?nome=anavi HTTP/1.1
 content-type: application/json
 
-#### delete ####
+#### delete usuário por id ####
 ########################################
-DELETE http://127.0.0.1:8000/usuario/id?id=4 HTTP/1.1
+DELETE http://127.0.0.1:8000/usuario/id?id=1 HTTP/1.1
 content-type: application/json
 
 #######################################
@@ -34,18 +34,31 @@ content-type: application/json
 #######################################
 
 # Criar endereço
-POST http://127.0.0.1:8000/endereco/2 HTTP/1.1
+POST http://127.0.0.1:8000/endereco/1/ HTTP/1.1
 content-type: application/json
 
 {
-    "rua": "Rua jose gomes ",
+    "rua": "Rua jose",
     "cep": "99999-999",
     "cidade": "Goiania",
     "estado": "GO"
 }
 
 #######################################
-# Listar endereços pelo domínio
+# ainda não consigo ##
+# Listar endereços usuário
+GET http://127.0.0.1:8000/usuario/1/enderecos HTTP/1.1
+content-type: application/json
+
+# deletar endereco do usuário ##
+## ainda não consigo ""
+
+DELETE http://127.0.0.1:8000/usuario/456/endereco/101 HTTP/1.1
+content-type: application/json
+
+
+#######################################
+# Listar EMAIL pelo domínio
 
 GET http://127.0.0.1:8000/usuarios/emails/dominio=@gmail.com  HTTP/1.1
 content-type: application/json
@@ -59,8 +72,23 @@ POST http://127.0.0.1:8000/produto HTTP/1.1
 content-type: application/json
 
 {
-    "id": 9,
+    "id":3,
     "nome": "Sorvete",
     "descricao": "Doce gelado",
     "preco": 9.99
 }
+
+##########################################
+###    excluir um produto pelo id  #######
+DELETE http://127.0.0.1:8000/produto/3 HTTP/1.1
+content-type: application/json
+
+##### CONSULTAR PRODUTO PELO ID ######
+GET http://127.0.0.1:8000/produto/3 HTTP/1.1
+content-type: application/json
+
+
+
+
+
+
