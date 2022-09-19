@@ -176,64 +176,61 @@ async def consultar_produto(id_produto: int):
       
 @app.delete("/produto/{id_produto}/")
 async def deletar_produto(id_produto: int):
-          if id_produto in db_produtos:
+    if id_produto in db_produtos:
                 del db_produtos[id_produto]
                 return OK, 'O produto foi descartado com sucesso'
-            
 
- 
-#ainda não consegui"        
-@app.post("/carrinho/{id_usuario}/{id_produto}/")
-async def adicionar_carrinho(id_usuario: int, id_produto: int, carrinho: CarrinhoDeCompras):
-        if id_produto not in db_produtos or id_usuario not in db_carrinhos:
-             carrinho == [id_usuario].append(id_produto)
-        return carrinho
+def cria_carrinho(id_usuario):
+    db_carrinhos[id_usuario] = {
+        
+        'id_usuario': 1,
+        'id_produtos': {},
+        'preco_total': 0,
+        'quantidade_de_produtos': 0
+    }        
+
+#adicionando item no carrinho"        
+@app.post("/carrinho/{id_usuario}/{id_produto}{quantidade}/")
+async def adicionar_item_carrinho(id_usuario, id_produto, quantidade):
+        db_carrinhos[id_usuario]['i_produtos'][id_produto] =({
+            "id": id_produto,
+            "quantidade": quantidade
+        })
+        
+        db_carrinhos[id_usuario]['quantidade_de_produtos'] += quantidade
+        db_carrinhos[id_usuario]['preco_total'] += db_produtos[id_produto].preco * quantidade
+        print(db_carrinhos)
+
+        # Adicionando item no carrinho   
+@app.post("/carrinho/{id_usuario}/{id_produto}/{quantidade}/")
+async def adicionar_carrinho(id_usuario: int, id_produto: int, quantidade: int):
+    if not id_usuario in db_usuarios or not id_produto in db_produtos:
+        return FALHA
+    if not id_usuario in db_carrinhos:
+        cria_carrinho(id_usuario)
+        adicionar_item_carrinho(id_usuario, id_produto, quantidade)
+        return OK
+    else :
+        adicionar_item_carrinho(id_usuario, id_produto, quantidade)
+        return OK
     
-        # if id_usuario and id_produto in db_carrinhos:
-        #     usuario = retornar_usuario(id_usuario)
-        #     produto_cadastrado = criar_produto(id_produto)
-        #     carrinho_cadastrado = retornar_carrinho(id_usuario)
-            
-        # if usuario and produto_cadastrado:
-        #     if carrinho_cadastrado:
-        #         carrinho_cadastrado.produtos.append(produto_cadastrado)
-        #         carrinho_cadastrado.preco_total += produto_cadastrado.preco
-        #         carrinho_cadastrado.quantidade_de_produtos = len (
-        #             carrinho_cadastrado.produto)
-        #     else:
-        #         carrinho = CarrinhoDeCompras(id_usuario=id_usuario, produtos=[produto_cadastrado],
-        #                                      preco_total=produto_cadastrado.preco, quantidade_de_produtos=1)
-        #         db_carrinhos.append(carrinho)
-        #         return OK
-        #     return FALHA
-            
-           
-                           
+                  
 #ainda não"
 @app.get("/carrinho/{id_usuario}/")
 async def retornar_carrinho(id_usuario: int):
-            if id_usuario not in db_carrinhos:
-                return FALHA
-            else:
+            if id_usuario in db_carrinhos:
                 return db_carrinhos[id_usuario]
+            return FALHA
             
-@app.get("/carrinho/{id_usuario}/")
-async def retornar_total_carrinho(id_usuario: int,carrinho: CarrinhoDeCompras):
-    if id_usuario not in db_carrinhos:
-        return 'Falha'
-    else:
-        numero_itens = carrinho.quantidade_de_produtos
-        valor_total = carrinho.preco_total
-    return numero_itens, valor_total
-        
-#  # não sei se isso ta pronto #    
-# @app.get("/carrinho/{id_usuario}/")
-# async def retornar_total_carrinho(id_usuario: int):
-#         if id_usuario in db_carrinhos:
-#             return db_carrinhos[id_usuario]['quantidade_de_produtos'], \
-#         db_carrinhos[id_usuario]['preco_total'] 
-#         return FALHA
-    
+# Buscando total do carrinho de um usuário
+@app.get("/carrinho/{id_usuario}/total")
+async def retornar_total_carrinho(id_usuario: int):
+    if id_usuario in db_carrinhos:
+        return db_carrinhos[id_usuario]['quantidade_de_produtos'],    
+    db_carrinhos[id_usuario]['preco_total'] 
+    return FALHA
+            
+
     
 @app.delete("/carrinho/{id_usuario}/")
 async def deletar_carrinho(id_usuario: int):
