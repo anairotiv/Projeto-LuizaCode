@@ -59,16 +59,6 @@ db_usuarios = {}
 db_produtos = {}
 db_enderecos = {}
 db_carrinhos = {}
-
-# Validar Usuários
-#def regras_cadastro_usuario(usuario):
-   # if usuario.id in db_usuarios:
-      #  return FALHA
-   # if usuario.email.endswith('@') == -1:
-      #  return FALHA
-   # if len(usuario.senha) < 3:
-     #   return FALHA
-   # return usuario(criar_usuário)
        
         
 @app.post("/usuario/")
@@ -95,14 +85,6 @@ async def retornar_usuario_com_nome(nome: str):
             
     return FALHA
 
-# @app.get("/usuario/nome")
-# async def retornar_usuario_com_nome(nome):
-#                 for nome in db_usuarios:
-#                     if nome == nome:
-#                         return db_usuarios[nome]
-#                     else:
-#                         return FALHA
-                
                 
 @app.delete("/usuario/id")
 async def deletar_usuario(id: int):
@@ -129,18 +111,6 @@ async def deletar_endereco(id_endereco: int):
                 return OK
             return FALHA
                   
-        # Se não existir usuário com o id_usuario retornar falha, 
-        # senão retornar uma lista de todos os endereços vinculados ao usuário
-        # caso o usuário não possua nenhum endereço vinculado a ele, retornar 
-        # uma lista vazia
-        ### Estudar sobre Path Params (https://fastapi.tiangolo.com/tutorial/path-params/)
-        # não consegui ainda
-        
-# @app.get("/usuario/")
-# async def retornar_usuario(id: int):
-#             if id in db_usuarios:
-#                 return db_usuarios[id]
-#             return FALHA, f'usuário não foi encontrado!'
      
 @app.get("/usuario/{id_usuario}/enderecos/")
 async def retornar_enderecos_do_usuario(id_usuario: int):
@@ -188,8 +158,7 @@ def cria_carrinho(id_usuario):
         'preco_total': 0,
         'quantidade_de_produtos': 0
     }        
-
-#adicionando item no carrinho"        
+     
 @app.post("/carrinho/{id_usuario}/{id_produto}{quantidade}/")
 async def adicionar_item_carrinho(id_usuario, id_produto, quantidade):
         db_carrinhos[id_usuario]['i_produtos'][id_produto] =({
@@ -200,8 +169,8 @@ async def adicionar_item_carrinho(id_usuario, id_produto, quantidade):
         db_carrinhos[id_usuario]['quantidade_de_produtos'] += quantidade
         db_carrinhos[id_usuario]['preco_total'] += db_produtos[id_produto].preco * quantidade
         print(db_carrinhos)
+        
 
-        # Adicionando item no carrinho   
 @app.post("/carrinho/{id_usuario}/{id_produto}/{quantidade}/")
 async def adicionar_carrinho(id_usuario: int, id_produto: int, quantidade: int):
     if not id_usuario in db_usuarios or not id_produto in db_produtos:
@@ -215,14 +184,13 @@ async def adicionar_carrinho(id_usuario: int, id_produto: int, quantidade: int):
         return OK
     
                   
-#ainda não"
 @app.get("/carrinho/{id_usuario}/")
 async def retornar_carrinho(id_usuario: int):
             if id_usuario in db_carrinhos:
                 return db_carrinhos[id_usuario]
             return FALHA
             
-# Buscando total do carrinho de um usuário
+            
 @app.get("/carrinho/{id_usuario}/total")
 async def retornar_total_carrinho(id_usuario: int):
     if id_usuario in db_carrinhos:

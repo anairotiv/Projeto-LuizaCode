@@ -1,0 +1,128 @@
+#######################################
+############  usuário  ################
+#######################################
+
+
+#######################################
+#########  criar usuário   ############
+POST http://127.0.0.1:8000/usuario HTTP/1.1
+content-type: application/json
+
+{
+    "id": 4,
+    "nome": "bruna",
+    "email": "bruna.gomes@gmail.com",
+    "senha": "26556"
+}
+
+#######################################
+####### retornar usuário pelo id #######   
+GET http://127.0.0.1:8000/usuario?id=1 HTTP/1.1
+content-type: application/json
+
+########################################
+####### retornar Usuario pelo nome #####
+
+GET http://127.0.0.1:8000/usuario/nome?nome=brunq HTTP/1.1
+content-type: application/json
+
+########################################
+####### delete usuário por id ##########
+DELETE http://127.0.0.1:8000/usuario/id?id=1 HTTP/1.1
+content-type: application/json
+
+
+
+
+#######################################
+############  endereço  ###############
+#######################################
+
+#######################################
+########## criar endereco #############
+POST http://127.0.0.1:8000/endereco/4/ HTTP/1.1
+content-type: application/json
+
+{
+    "id_endereco":3,
+    "rua": "Rua gomes",
+    "cep": "99999-999",
+    "cidade": "Goiania",
+    "estado": "GO"
+}
+
+#######################################
+### retornar endereco dos usuários ####
+GET http://127.0.0.1:8000/usuario/4/enderecos HTTP/1.1
+content-type: application/json
+
+#     deletar endereco do usuário 
+#######################################
+DELETE http://127.0.0.1:8000/endereco/3 HTTP/1.1
+content-type: application/json
+
+
+#######################################
+####### Listar EMAIL pelo domínio #####
+
+GET http://127.0.0.1:8000/usuarios/emails/dominio=@gmail.com  HTTP/1.1
+content-type: application/json
+
+#######################################
+############  produto  ################
+#######################################
+
+# Criar produto
+POST http://127.0.0.1:8000/produto HTTP/1.1
+content-type: application/json
+
+{
+    "id":2,
+    "nome": "Sorvete",
+    "descricao": "Doce gelado",
+    "preco": 9.99
+}
+
+##########################################
+####### excluir um produto pelo id  ######
+DELETE http://127.0.0.1:8000/produto/2 HTTP/1.1
+content-type: application/json
+
+##########################################
+##### CONSULTAR PRODUTO PELO ID ##########
+GET http://127.0.0.1:8000/produto/2 HTTP/1.1
+content-type: application/json
+
+#############################################
+######## Criar carrinho usuario #############
+# precisa passar id_usuario, id_produto e a quantidade
+POST http://127.0.0.1:8000/carrinho/4/2/3 HTTP/1.1
+content-type: application/json
+
+{
+    
+}
+
+###############################################
+# Adicionanr algum item, usuario, produto, quantidade
+POST http://127.0.0.1:8000/carrinho/4/2/3 HTTP/1.1
+content-type: application/json
+
+{
+    
+}
+
+###############################################
+##### Busca carrinho de um cliente ############
+GET http://127.0.0.1:8000/carrinho/4/ HTTP/1.1
+content-type: application/json
+
+###############################################
+###### Busca total carrinho de um cliente #####
+GET http://127.0.0.1:8000/carrinho/4/total HTTP/1.1
+content-type: application/json
+
+###############################################
+###### Deleta carrinho de um cliente ##########
+DELETE http://127.0.0.1:8000/carrinho/4/ HTTP/1.1
+content-type: application/json
