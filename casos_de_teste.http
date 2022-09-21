@@ -9,7 +9,7 @@ POST http://127.0.0.1:8000/usuario HTTP/1.1
 content-type: application/json
 
 {
-    "id": 4,
+    "id": 5,
     "nome": "bruna",
     "email": "bruna.gomes@gmail.com",
     "senha": "26556"
@@ -17,13 +17,13 @@ content-type: application/json
 
 #######################################
 ####### retornar usuário pelo id #######   
-GET http://127.0.0.1:8000/usuario?id=1 HTTP/1.1
+GET http://127.0.0.1:8000/usuario?id=4 HTTP/1.1
 content-type: application/json
 
 ########################################
 ####### retornar Usuario pelo nome #####
 
-GET http://127.0.0.1:8000/usuario/nome?nome=brunq HTTP/1.1
+GET http://127.0.0.1:8000/usuario/nome?nome=bruna HTTP/1.1
 content-type: application/json
 
 ########################################
@@ -40,7 +40,7 @@ content-type: application/json
 
 #######################################
 ########## criar endereco #############
-POST http://127.0.0.1:8000/endereco/4/ HTTP/1.1
+POST http://127.0.0.1:8000/endereco/5/ HTTP/1.1
 content-type: application/json
 
 {
@@ -53,12 +53,12 @@ content-type: application/json
 
 #######################################
 ### retornar endereco dos usuários ####
-GET http://127.0.0.1:8000/usuario/4/enderecos HTTP/1.1
+GET http://127.0.0.1:8000/usuario/5/enderecos/ HTTP/1.1
 content-type: application/json
 
 #     deletar endereco do usuário 
 #######################################
-DELETE http://127.0.0.1:8000/endereco/3 HTTP/1.1
+DELETE http://127.0.0.1:8000/endereco/3/ HTTP/1.1
 content-type: application/json
 
 

@@ -81,7 +81,7 @@ async def retornar_usuario(id: int):
 async def retornar_usuario_com_nome(nome: str):
     for usuario in db_usuarios.values():
         if usuario.nome == nome:
-            return f'id: {usuario.id}, nome: {usuario.nome}, email: {usuario.email}, senha: {usuario.senha}'
+            return db_usuarios[usuario.id]
             
     return FALHA
 
@@ -106,12 +106,15 @@ async def criar_endereco(end: Endereco, id_usuario: int):
             
 @app.delete("/endereco/{id_endereco}/")
 async def deletar_endereco(id_endereco: int):
-            if id_endereco in db_enderecos:
-                db_enderecos.pop(id_endereco)
-                return OK
-            return FALHA
-                  
-     
+    for endereco in db_enderecos.items():
+        print(id_endereco)
+        if id_endereco in endereco[1]['enderecos']:
+            print(f'Deletar endereco {id_endereco}')
+            endereco[1]['enderecos'].pop(id_endereco)
+            return OK
+    return FALHA
+
+
 @app.get("/usuario/{id_usuario}/enderecos/")
 async def retornar_enderecos_do_usuario(id_usuario: int):
            if id_usuario in db_usuarios:
@@ -153,7 +156,7 @@ async def deletar_produto(id_produto: int):
 def cria_carrinho(id_usuario):
     db_carrinhos[id_usuario] = {
         
-        'id_usuario': 1,
+        'id_usuario': id_usuario,
         'id_produtos': {},
         'preco_total': 0,
         'quantidade_de_produtos': 0
@@ -161,7 +164,7 @@ def cria_carrinho(id_usuario):
      
 @app.post("/carrinho/{id_usuario}/{id_produto}{quantidade}/")
 async def adicionar_item_carrinho(id_usuario, id_produto, quantidade):
-        db_carrinhos[id_usuario]['i_produtos'][id_produto] =({
+        db_carrinhos[id_usuario]['id_produtos'][id_produto] =({
             "id": id_produto,
             "quantidade": quantidade
         })
@@ -202,9 +205,9 @@ async def retornar_total_carrinho(id_usuario: int):
     
 @app.delete("/carrinho/{id_usuario}/")
 async def deletar_carrinho(id_usuario: int):
-            if id_usuario not in db_usuarios:
-                return FALHA
-            else:
-                del db_carrinhos[id_usuario]
-                return OK
+    if id_usuario in db_carrinhos:
+        db_carrinhos.pop(id_usuario)
+        print(f"Deletando o carrinho do usuario {id_usuario} ")
+        return OK
+    return FALHA
         
